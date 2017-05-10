@@ -1,10 +1,6 @@
-package cl.zeke.framework.jsf.converters.jsonconverter;
+package com.github.erodriguezg.jsfutils.converters.jsonconverter;
 
-/**
- * Created by takeda on 03-01-16.
- */
-
-import cl.zeke.framework.utils.CodecUtils;
+import com.github.erodriguezg.javautils.CodecUtils;
 import com.google.gson.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author zeke
+ * @author erodriguezg
  */
 public class JsonConverter implements Converter {
 
@@ -36,14 +32,15 @@ public class JsonConverter implements Converter {
         this.codecUtils = new CodecUtils();
     }
 
-    public Object getAsObject(FacesContext fc, UIComponent uic, String objetSerialized) {
-        if (objetSerialized == null || objetSerialized.trim().isEmpty()) {
+    public Object getAsObject(FacesContext fc, UIComponent uic, String objetSerializedParam) {
+        if (objetSerializedParam == null || objetSerializedParam.trim().isEmpty()) {
             return null;
         }
         Pattern p = Pattern.compile("^(.*)" + SEPARADOR_JSON + "(.*)");
 
+        String objetSerialized;
         try {
-            objetSerialized = codecUtils.decodiarBase64(objetSerialized);
+            objetSerialized = codecUtils.decodiarBase64(objetSerializedParam);
         } catch (IOException ex) {
             LOG.error("error", ex);
             throw new ConverterException("Error de conversión");
@@ -84,7 +81,7 @@ public class JsonConverter implements Converter {
         gsonBuilder.registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer());
         gsonBuilder.registerTypeAdapter(java.sql.Time.class, new TimeSerializer());
         gsonBuilder.registerTypeAdapter(java.sql.Time.class, new TimeDeserializer());
-        if(this.exclusionStrategy != null) {
+        if (this.exclusionStrategy != null) {
             gsonBuilder.setExclusionStrategies(this.exclusionStrategy);
         }
         return gsonBuilder.create();

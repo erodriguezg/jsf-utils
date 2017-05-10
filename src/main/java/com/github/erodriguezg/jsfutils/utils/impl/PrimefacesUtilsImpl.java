@@ -1,6 +1,6 @@
-package cl.zeke.framework.jsf.utils.impl;
+package com.github.erodriguezg.jsfutils.utils.impl;
 
-import cl.zeke.framework.jsf.utils.PrimefacesUtils;
+import com.github.erodriguezg.jsfutils.utils.PrimefacesUtils;
 import org.apache.commons.io.IOUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by takeda on 03-01-16.
- */
 public class PrimefacesUtilsImpl implements PrimefacesUtils {
 
     @Override

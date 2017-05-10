@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.converters;
+package com.github.erodriguezg.jsfutils.converters;
 
 /**
  * Created by takeda on 03-01-16.

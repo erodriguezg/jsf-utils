@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.converters.jsonconverter;
+package com.github.erodriguezg.jsfutils.converters.jsonconverter;
 
 /**
  * Created by takeda on 03-01-16.

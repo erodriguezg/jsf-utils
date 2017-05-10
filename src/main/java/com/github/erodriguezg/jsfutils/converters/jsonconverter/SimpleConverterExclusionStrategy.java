@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.converters.jsonconverter;
+package com.github.erodriguezg.jsfutils.converters.jsonconverter;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 
 /**
- * Created by eduardo on 21-02-17.
+ * Created by erodriguezg
  */
 public class SimpleConverterExclusionStrategy implements ExclusionStrategy {
 

@@ -1,8 +1,4 @@
-package cl.zeke.framework.jsf.converters;
-
-/**
- * Created by takeda on 03-01-16.
- */
+package com.github.erodriguezg.jsfutils.converters;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -35,11 +31,11 @@ public class RutConverter implements Converter {
         mask = Pattern.compile(RUT_REGEX);
 
 		/*
-		 * Get the string value of the current field
+         * Get the string value of the current field
 		 */
-        rutField = (String) value.trim();
+        rutField = value.trim();
         String rutConPuntos = rutField.split("-")[0];
-        String arreglorutSinPuntos[] = rutConPuntos.split("\\.");
+        String[] arreglorutSinPuntos = rutConPuntos.split("\\.");
         String rutSinPuntos = "";
 
         for (int i = 0; i < arreglorutSinPuntos.length; i++) {
@@ -49,7 +45,7 @@ public class RutConverter implements Converter {
         rutSinPuntos = rutSinPuntos.trim();
         rutSinPuntos = rutSinPuntos.toUpperCase();
 
-        String arreglorutSinComas[] = rutSinPuntos.split("\\,");
+        String[] arreglorutSinComas = rutSinPuntos.split("\\,");
 
         rutSinPuntos = "";
         for (int i = 0; i < arreglorutSinComas.length; i++) {
@@ -57,7 +53,10 @@ public class RutConverter implements Converter {
         }
 
         try {
-            Integer.parseInt(rutSinPuntos);
+            int rutInt = Integer.parseInt(rutSinPuntos);
+            if(rutInt < 0) {
+                throw new NumberFormatException();
+            }
         } catch (NumberFormatException ex) {
             FacesMessage message = new FacesMessage();
             message.setDetail("Por favor ingrese RUN en formato correcto");

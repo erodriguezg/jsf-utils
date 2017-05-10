@@ -1,8 +1,4 @@
-package cl.zeke.framework.jsf.converters.jsonconverter;
-
-/**
- * Created by takeda on 03-01-16.
- */
+package com.github.erodriguezg.jsfutils.converters.jsonconverter;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

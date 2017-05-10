@@ -1,8 +1,4 @@
-package cl.zeke.framework.jsf.converters;
-
-/**
- * Created by takeda on 03-01-16.
- */
+package com.github.erodriguezg.jsfutils.converters;
 
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;

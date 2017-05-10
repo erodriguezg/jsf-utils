@@ -1,11 +1,13 @@
-package cl.zeke.framework.jsf.utils.impl;
+package com.github.erodriguezg.jsfutils.utils.impl;
 
 /**
  * Created by takeda on 03-01-16.
  */
 
-import cl.zeke.framework.jsf.utils.JsfUtils;
+import com.github.erodriguezg.jsfutils.utils.JsfUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 public class JsfUtilsImpl implements JsfUtils {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JsfUtilsImpl.class);
 
     @Override
     public void salvarMensajesJSFenFlash() {
@@ -47,7 +50,7 @@ public class JsfUtilsImpl implements JsfUtils {
         StringBuilder queryString = new StringBuilder();
         boolean primeroParametro = true;
         String parametro;
-        for (Map.Entry<String,String[]> entry : parametersMap.entrySet()) {
+        for (Map.Entry<String, String[]> entry : parametersMap.entrySet()) {
             parametro = entry.getKey();
             if (primeroParametro) {
                 queryString.append("?");
@@ -216,12 +219,12 @@ public class JsfUtilsImpl implements JsfUtils {
     @Override
     public void download(InputStream archivoInputStream, String fileName, String contentType) throws IOException {
         File fileTemp = File.createTempFile(UUID.randomUUID().toString(), ".download.tmp");
-        try(OutputStream outputStream = new FileOutputStream(fileTemp)) {
+        try (OutputStream outputStream = new FileOutputStream(fileTemp)) {
             IOUtils.copy(archivoInputStream, outputStream);
             download(fileTemp, fileName, contentType);
-        }finally {
-            if(fileTemp != null) {
-                fileTemp.delete();
+        } finally {
+            if (fileTemp != null && !fileTemp.delete()) {
+                LOG.warn("No se pudo eliminar el archivo temporal: {}", fileTemp);
             }
         }
     }

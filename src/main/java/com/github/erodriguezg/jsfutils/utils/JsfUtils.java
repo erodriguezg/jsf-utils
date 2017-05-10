@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.utils;
+package com.github.erodriguezg.jsfutils.utils;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-/**
- * Created by eduardo on 05-01-16.
- */
 public interface JsfUtils {
 
     void salvarMensajesJSFenFlash();

@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.utils;
+package com.github.erodriguezg.jsfutils.utils;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -10,9 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by eduardo on 05-01-16.
- */
 public interface PrimefacesUtils {
 
     void execute(String script);

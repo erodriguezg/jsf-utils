@@ -1,4 +1,4 @@
-package cl.zeke.framework.jsf.converters.jsonconverter;
+package com.github.erodriguezg.jsfutils.converters.jsonconverter;
 
 /**
  * Created by takeda on 03-01-16.
@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 /**
- * @author zeke
+ * @author github
  */
 public class JsonConverterTest {
 

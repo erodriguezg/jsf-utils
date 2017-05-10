@@ -1,8 +1,4 @@
-package cl.zeke.framework.jsf.support;
-
-/**
- * Created by takeda on 04-01-16.
- */
+package com.github.erodriguezg.jsfutils.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +12,28 @@ public class ViewExpiredFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ViewExpiredFilter.class);
 
-    private static final String URL_REDIRECT = "/";
+    private static final String REDIRECT_URL_INIT_PARAMETER = "redirect-url";
+    private static final String DEFAULT_URL_REDIRECT = "/";
+
+    private String redirectUrl;
+
+
+    public ViewExpiredFilter() {
+        this.redirectUrl = null;
+    }
+
+    public ViewExpiredFilter(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         LOG.info("VIEW EXPIRED FILTER - INIT");
+        if (this.redirectUrl != null) {
+            return;
+        }
+        String redirectUrlInitParam = filterConfig.getInitParameter(REDIRECT_URL_INIT_PARAMETER);
+        this.redirectUrl = redirectUrlInitParam != null ? redirectUrlInitParam : DEFAULT_URL_REDIRECT;
     }
 
     @Override
@@ -31,7 +44,7 @@ public class ViewExpiredFilter implements Filter {
             if (isAjax(request) && !request.isRequestedSessionIdValid()) {
                 LOG.warn("Session expiration during ajax request, partial redirect to login page");
                 HttpServletResponse response = (HttpServletResponse) resp;
-                response.getWriter().print(xmlPartialRedirectToPage(request, getUrlRedirect()));
+                response.getWriter().print(xmlPartialRedirectToPage(request, redirectUrl));
                 response.flushBuffer();
             } else {
                 chain.doFilter(req, resp);
@@ -44,10 +57,10 @@ public class ViewExpiredFilter implements Filter {
             LOG.error("EXCEPTION unique id: " + e.hashCode(), e);
             HttpServletResponse response = (HttpServletResponse) resp;
             if (!isAjax(request)) {
-                response.sendRedirect(request.getContextPath() + request.getServletPath() + getUrlRedirect());
+                response.sendRedirect(request.getContextPath() + request.getServletPath() + redirectUrl);
             } else {
                 // let's leverage jsf2 partial response
-                response.getWriter().print(xmlPartialRedirectToPage(request, getUrlRedirect()));
+                response.getWriter().print(xmlPartialRedirectToPage(request, redirectUrl));
                 response.flushBuffer();
             }
         }
@@ -69,8 +82,7 @@ public class ViewExpiredFilter implements Filter {
         return "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
     }
 
-    protected String getUrlRedirect() {
-        return URL_REDIRECT;
+    public String getRedirectUrl() {
+        return redirectUrl;
     }
-
 }
