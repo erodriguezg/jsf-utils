@@ -12,18 +12,22 @@ public class ViewExpiredFilter implements Filter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ViewExpiredFilter.class);
 
+    private static final String CAPTURE_ALL_EXCEPTIONS_INIT_PARAMETER = "capture-all-exceptions";
     private static final String REDIRECT_URL_INIT_PARAMETER = "redirect-url";
     private static final String DEFAULT_URL_REDIRECT = "/";
 
     private String redirectUrl;
+    private boolean captureAllExceptions;
 
 
     public ViewExpiredFilter() {
         this.redirectUrl = null;
+        this.captureAllExceptions = false;
     }
 
     public ViewExpiredFilter(String redirectUrl) {
         this.redirectUrl = redirectUrl;
+        this.captureAllExceptions = false;
     }
 
     @Override
@@ -32,8 +36,14 @@ public class ViewExpiredFilter implements Filter {
         if (this.redirectUrl != null) {
             return;
         }
+
+        //redirect url
         String redirectUrlInitParam = filterConfig.getInitParameter(REDIRECT_URL_INIT_PARAMETER);
         this.redirectUrl = redirectUrlInitParam != null ? redirectUrlInitParam : DEFAULT_URL_REDIRECT;
+
+        //capture all exceptions
+        String captureAllExceptionsInitParam = filterConfig.getInitParameter(CAPTURE_ALL_EXCEPTIONS_INIT_PARAMETER);
+        this.captureAllExceptions = captureAllExceptionsInitParam != null && Boolean.parseBoolean(captureAllExceptionsInitParam);
     }
 
     @Override
@@ -56,9 +66,13 @@ public class ViewExpiredFilter implements Filter {
             request.getSession().setAttribute("lastExceptionUniqueId", e.hashCode());
             LOG.error("EXCEPTION unique id: " + e.hashCode(), e);
             HttpServletResponse response = (HttpServletResponse) resp;
-            if (!isAjax(request)) {
-                response.sendRedirect(request.getContextPath() + request.getServletPath() + redirectUrl);
-            } else {
+            if (!isAjax(request) && !captureAllExceptions) {
+                throw e;
+            }
+            else if(!isAjax(request) && captureAllExceptions) {
+                response.sendRedirect(request.getContextPath() + redirectUrl);
+            }
+            else{
                 // let's leverage jsf2 partial response
                 response.getWriter().print(xmlPartialRedirectToPage(request, redirectUrl));
                 response.flushBuffer();
