@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Map;
 
 public interface JsfUtils {
@@ -68,5 +69,9 @@ public interface JsfUtils {
     void download(File archivo, String fileName, String contentType) throws IOException;
 
     FacesContext getFacesContextCurrentInstance();
+
+    String getBundleMsg(String bundleAlias, String key);
+
+    String getBundleMsg(String baseName, String key, Locale locale);
 
 }
