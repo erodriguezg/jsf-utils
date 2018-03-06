@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 public class JsfUtilsImpl implements JsfUtils {
@@ -245,4 +247,19 @@ public class JsfUtilsImpl implements JsfUtils {
     public FacesContext getFacesContextCurrentInstance() {
         return FacesContext.getCurrentInstance();
     }
+
+    @Override
+    public String getBundleMsg(String bundleAlias, String key) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ResourceBundle bundle = context.getApplication().getResourceBundle(context, bundleAlias);
+        return bundle.getString(key);
+    }
+
+    @Override
+    public String getBundleMsg(String baseName, String key, Locale locale) {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, loader);
+        return bundle.getString(key);
+    }
+
 }
