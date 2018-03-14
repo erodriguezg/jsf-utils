@@ -12,7 +12,7 @@
 
     <groupId>com.github.erodriguezg</groupId>
     <artifactId>jsf-utils</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
     <name>github erodriguezg jsf2 utils</name>
     <description>Clases utilitarias para desarrollo JSF 2</description>
     <url>https://github.com/erodriguezg/jsf-utils</url>

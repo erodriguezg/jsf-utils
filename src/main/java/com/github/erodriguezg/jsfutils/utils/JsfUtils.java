@@ -11,12 +11,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public interface JsfUtils {
 
     void salvarMensajesJSFenFlash();
 
     void jsfRedirect(String viewId, Map<String, String[]> parameters);
+
+    Map<String,String[]> getRequestParametersMap();
 
     String[] getRequestParameterValues(String paramName);
 
@@ -73,5 +76,7 @@ public interface JsfUtils {
     String getBundleMsg(String bundleAlias, String key);
 
     String getBundleMsg(String baseName, String key, Locale locale);
+
+    ResourceBundle getResourceBundle(String bundleAlias);
 
 }

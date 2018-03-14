@@ -48,6 +48,12 @@ public class JsfUtilsImpl implements JsfUtils {
         }
     }
 
+    @Override
+    public Map<String, String[]> getRequestParametersMap() {
+        HttpServletRequest httpRequest = obtenerHttpServletRequest();
+        return httpRequest.getParameterMap();
+    }
+
     private static String crearQueryString(Map<String, String[]> parametersMap) {
         StringBuilder queryString = new StringBuilder();
         boolean primeroParametro = true;
@@ -260,6 +266,12 @@ public class JsfUtilsImpl implements JsfUtils {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, loader);
         return bundle.getString(key);
+    }
+
+    @Override
+    public ResourceBundle getResourceBundle(String bundleAlias) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        return context.getApplication().getResourceBundle(context, bundleAlias);
     }
 
 }
