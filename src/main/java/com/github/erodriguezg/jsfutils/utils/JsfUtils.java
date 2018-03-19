@@ -75,6 +75,8 @@ public interface JsfUtils {
 
     String getBundleMsg(String bundleAlias, String key);
 
+    String getBundleMsg(String bundleAlias, String key, Object ... params);
+
     String getBundleMsg(String baseName, String key, Locale locale);
 
     ResourceBundle getResourceBundle(String bundleAlias);

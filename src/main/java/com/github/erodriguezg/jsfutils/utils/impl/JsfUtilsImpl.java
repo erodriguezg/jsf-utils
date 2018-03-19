@@ -17,10 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.text.MessageFormat;
+import java.util.*;
 
 public class JsfUtilsImpl implements JsfUtils {
 
@@ -231,7 +230,9 @@ public class JsfUtilsImpl implements JsfUtils {
             IOUtils.copy(archivoInputStream, outputStream);
             download(fileTemp, fileName, contentType);
         } finally {
-            if (fileTemp != null && !fileTemp.delete()) {
+            try {
+                Files.delete(fileTemp.toPath());
+            } catch (IOException ex) {
                 LOG.warn("No se pudo eliminar el archivo temporal: {}", fileTemp);
             }
         }
@@ -259,6 +260,12 @@ public class JsfUtilsImpl implements JsfUtils {
         FacesContext context = FacesContext.getCurrentInstance();
         ResourceBundle bundle = context.getApplication().getResourceBundle(context, bundleAlias);
         return bundle.getString(key);
+    }
+
+    @Override
+    public String getBundleMsg(String bundleAlias, String key, Object ... params) {
+        String msg = getBundleMsg(bundleAlias, key);
+        return MessageFormat.format(msg, params);
     }
 
     @Override
