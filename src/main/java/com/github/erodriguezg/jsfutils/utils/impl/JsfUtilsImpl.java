@@ -126,6 +126,24 @@ public class JsfUtilsImpl implements JsfUtils {
     }
 
     @Override
+    public void addErrorMessage(List<String> messages) {
+        if(messages == null || messages.isEmpty()) {
+            return;
+        }
+        if(messages.size() == 1) {
+            addErrorMessage(messages.get(0));
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<ul>");
+        for(String message : messages) {
+            sb.append("<li>").append(message).append("</li>");
+        }
+        sb.append("</ul>");
+        addErrorMessage(sb.toString());
+    }
+
+    @Override
     public void addErrorMessage(String componentId, String messsage) {
         FacesContext.getCurrentInstance().addMessage(
                 componentId,

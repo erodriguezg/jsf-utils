@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -36,6 +37,8 @@ public interface JsfUtils {
     FacesMessage createInfoMessage(String message);
 
     void addErrorMessage(String message);
+
+    void addErrorMessage(List<String> messages);
 
     void addErrorMessage(String componentId, String messsage);
 
