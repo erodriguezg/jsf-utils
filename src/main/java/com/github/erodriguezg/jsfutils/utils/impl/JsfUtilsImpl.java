@@ -258,6 +258,18 @@ public class JsfUtilsImpl implements JsfUtils {
 
     @Override
     public void download(File archivo, String fileName, String contentType) throws IOException {
+
+        //cookie primefaces DOWNLOAD
+
+        FacesContext facesContext = this.getFacesContextCurrentInstance();
+        facesContext.getExternalContext().addResponseCookie(
+                org.primefaces.util.Constants.DOWNLOAD_COOKIE,
+                "true",
+                Collections.<String, Object>emptyMap()
+        );
+
+        //download
+
         HttpServletResponse httpResponse = this.obtenerHttpServletResponse();
         httpResponse.setHeader("Content-Disposition", "attachment; filename=\"@filename\"".replace("@filename", fileName));
         httpResponse.setContentType(fileName);
