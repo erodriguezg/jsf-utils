@@ -16,10 +16,21 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class JsfUtilsImpl implements JsfUtils {
 
@@ -127,16 +138,16 @@ public class JsfUtilsImpl implements JsfUtils {
 
     @Override
     public void addErrorMessage(List<String> messages) {
-        if(messages == null || messages.isEmpty()) {
+        if (messages == null || messages.isEmpty()) {
             return;
         }
-        if(messages.size() == 1) {
+        if (messages.size() == 1) {
             addErrorMessage(messages.get(0));
             return;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("<ul>");
-        for(String message : messages) {
+        for (String message : messages) {
             sb.append("<li>").append(message).append("</li>");
         }
         sb.append("</ul>");
@@ -243,10 +254,18 @@ public class JsfUtilsImpl implements JsfUtils {
 
     @Override
     public void download(InputStream archivoInputStream, String fileName, String contentType) throws IOException {
+        String contentDispositionHeader = "attachment; filename=\"@filename\"".replace("@filename", fileName);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Disposition", contentDispositionHeader);
+        download(archivoInputStream, contentType, headers);
+    }
+
+    @Override
+    public void download(InputStream archivoInputStream, String contentType, Map<String, String> headerMap) throws IOException {
         File fileTemp = File.createTempFile(UUID.randomUUID().toString(), ".download.tmp");
         try (OutputStream outputStream = new FileOutputStream(fileTemp)) {
             IOUtils.copy(archivoInputStream, outputStream);
-            download(fileTemp, fileName, contentType);
+            download(fileTemp, contentType, headerMap);
         } finally {
             try {
                 Files.delete(fileTemp.toPath());
@@ -258,7 +277,14 @@ public class JsfUtilsImpl implements JsfUtils {
 
     @Override
     public void download(File archivo, String fileName, String contentType) throws IOException {
+        String contentDispositionHeader = "attachment; filename=\"@filename\"".replace("@filename", fileName);
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Disposition", contentDispositionHeader);
+        download(archivo, contentType, headers);
+    }
 
+    @Override
+    public void download(File archivo, String contentType, Map<String, String> headerMap) throws IOException {
         //cookie primefaces DOWNLOAD
 
         FacesContext facesContext = this.getFacesContextCurrentInstance();
@@ -271,14 +297,18 @@ public class JsfUtilsImpl implements JsfUtils {
         //download
 
         HttpServletResponse httpResponse = this.obtenerHttpServletResponse();
-        httpResponse.setHeader("Content-Disposition", "attachment; filename=\"@filename\"".replace("@filename", fileName));
-        httpResponse.setContentType(fileName);
+        for (Map.Entry<String, String> header : headerMap.entrySet()) {
+            httpResponse.setHeader(header.getKey(), header.getValue());
+        }
+
+        httpResponse.setContentType(contentType);
         try (InputStream inputStream = new FileInputStream(archivo);
              OutputStream outputStream = httpResponse.getOutputStream()) {
             IOUtils.copy(inputStream, outputStream);
         }
         FacesContext.getCurrentInstance().responseComplete();
     }
+
 
     @Override
     public FacesContext getFacesContextCurrentInstance() {
@@ -293,7 +323,7 @@ public class JsfUtilsImpl implements JsfUtils {
     }
 
     @Override
-    public String getBundleMsg(String bundleAlias, String key, Object ... params) {
+    public String getBundleMsg(String bundleAlias, String key, Object... params) {
         String msg = getBundleMsg(bundleAlias, key);
         return MessageFormat.format(msg, params);
     }

@@ -72,7 +72,11 @@ public interface JsfUtils {
 
     void download(InputStream archivo, String fileName, String contentType) throws IOException;
 
+    void download(InputStream archivoInputStream, String contentType, Map<String, String> headerMap) throws IOException;
+
     void download(File archivo, String fileName, String contentType) throws IOException;
+
+    void download(File archivo, String contentType, Map<String, String> headerMap) throws IOException;
 
     FacesContext getFacesContextCurrentInstance();
 
